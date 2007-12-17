@@ -12,7 +12,6 @@ Patch1: suspend-0.5-bootsplash.patch
 License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: pciutils-devel glibc-static-devel lzf-devel
 ExcludeArch: ppc
 Obsoletes: wltool
