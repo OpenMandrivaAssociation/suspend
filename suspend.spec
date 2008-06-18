@@ -4,7 +4,7 @@
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
 Name: %{name}
 Version: %{version}
-Release: %mkrel 12
+Release: %mkrel 13
 Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0: suspend-0.5-no_s2ram_quirks.patch
 Patch1: suspend-0.5-bootsplash.patch
