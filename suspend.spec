@@ -57,6 +57,7 @@ rm -rf %{buildroot}
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_sysconfdir}
 %makeinstall_std
+ln -sf %{_libdir}/%{name}/resume %{buildroot}%{_sbindir}
 
 %clean
 rm -rf %{buildroot}
@@ -71,6 +72,7 @@ rm -rf %{buildroot}
 %{_sbindir}/s2both
 %{_sbindir}/s2disk
 %{_sbindir}/swap-offset
+%{_libdir}/%{name}/resume
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 
 %files s2ram
