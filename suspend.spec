@@ -13,7 +13,7 @@ License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: pciutils-devel glibc-static-devel libx86-devel liblzo-devel
+BuildRequires: pciutils-devel glibc-static-devel libx86-devel liblzo-devel splashy-devel
 ExcludeArch: ppc
 Obsoletes: wltool
 Obsoletes: suspend-wltool
@@ -47,7 +47,8 @@ perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
 %configure \
-  --enable-compress
+  --enable-compress \
+  --enable-splashy
 %make
 
 %install
