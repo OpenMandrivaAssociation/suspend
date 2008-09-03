@@ -9,6 +9,8 @@ Release: %{release}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0: suspend-0.8-no_s2ram_quirks.patch
 Patch1: suspend-0.5-bootsplash.patch
+# http://suspend.cvs.sourceforge.net/suspend/suspend/configure.ac?r1=1.10&r2=1.12&view=patch
+Patch2: suspend-0.8-splashy-detection.patch
 License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
@@ -43,6 +45,8 @@ s2ram is a suspend-to-RAM utility.
 %setup -q
 %patch0 -p1 -b .no_s2ram_quirks
 %patch1 -p1 -b .bootsplash
+%patch2 -p0 -b .splashy-detection
+autoreconf # for splashy detection
 perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
