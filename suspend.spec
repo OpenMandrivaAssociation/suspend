@@ -49,6 +49,7 @@ perl -pi -e "s|^#?SUSPEND_DIR=.*|SUSPEND_DIR=%{_sbindir}|" Makefile
 perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
+%configure
 %make
 
 %install
