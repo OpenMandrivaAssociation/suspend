@@ -7,7 +7,7 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Patch0: suspend-0.5-no_s2ram_quirks.patch
+Patch0: suspend-0.8-no_s2ram_quirks.patch
 Patch1: suspend-0.5-bootsplash.patch
 License: GPL
 Group: System/Kernel and hardware
