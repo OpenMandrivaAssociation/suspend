@@ -1,11 +1,12 @@
 %define name suspend
-%define version 0.5
+%define version 0.8
+%define release %mkrel 1
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
 Name: %{name}
 Version: %{version}
-Release: %mkrel 13
-Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+Release: %{release}
+Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0: suspend-0.5-no_s2ram_quirks.patch
 Patch1: suspend-0.5-bootsplash.patch
 License: GPL
