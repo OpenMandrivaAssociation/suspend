@@ -43,7 +43,6 @@ s2ram is a suspend-to-RAM utility.
 %setup -q
 %patch0 -p1 -b .no_s2ram_quirks
 %patch1 -p1 -b .bootsplash
-perl -pi -e "s|^#?SUSPEND_DIR=.*|SUSPEND_DIR=%{_sbindir}|" Makefile
 perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
