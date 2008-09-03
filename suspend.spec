@@ -13,7 +13,7 @@ License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: pciutils-devel glibc-static-devel libx86-devel lzf-devel
+BuildRequires: pciutils-devel glibc-static-devel libx86-devel liblzo-devel
 ExcludeArch: ppc
 Obsoletes: wltool
 Obsoletes: suspend-wltool
@@ -44,12 +44,12 @@ s2ram is a suspend-to-RAM utility.
 %patch0 -p1 -b .no_s2ram_quirks
 %patch1 -p1 -b .bootsplash
 perl -pi -e "s|^#?CONFIG_UDEV=.*|CONFIG_UDEV=yes|" Makefile
-perl -pi -e "s|^#?CONFIG_COMPRESS=.*|CONFIG_COMPRESS=yes|" Makefile
 perl -pi -e "s|^#?SUSPEND_DIR=.*|SUSPEND_DIR=%{_sbindir}|" Makefile
 perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
-%configure
+%configure \
+  --enable-compress
 %make
 
 %install
