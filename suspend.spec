@@ -52,7 +52,8 @@ perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 %build
 %configure \
   --enable-compress \
-  --enable-splashy
+  --enable-splashy \
+  --disable-resume-static
 %make
 
 %install
