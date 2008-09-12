@@ -42,6 +42,7 @@ Patch70: suspend-0.80-whitelist-openSUSE11.diff
 #- Mandriva patches
 Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
+Patch102: suspend-0.8.20080612-mdvcomment.patch
 
 License: GPL
 Group: System/Kernel and hardware
@@ -95,6 +96,7 @@ s2ram is a suspend-to-RAM utility.
 #- Mandriva patches
 %patch100 -p1 -b .no_s2ram_quirks
 %patch101 -p1 -b .bootsplash
+%patch102 -p1 -b .mdvcomment
 
 %build
 %configure \
