@@ -23,7 +23,8 @@ Patch3: suspend-default-compress.diff
 # no more bootsplash in kernel and thus no /proc/splash, patch not needed
 #Patch4: suspend-disable-bootsplash.diff
 Patch5: suspend-default-splash.diff
-Patch6: suspend-0.80-dont-return-eintr-on-abort.diff
+# user interruption could be considered as an error, don't apply
+#Patch6: suspend-0.80-dont-return-eintr-on-abort.diff
 Patch10: suspend-use-input-device.diff
 # we don't test whitelist
 #Patch11: suspend-0.80-make-whitelist-test.diff
