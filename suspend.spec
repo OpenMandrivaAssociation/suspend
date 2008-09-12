@@ -14,18 +14,34 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
-# opensuse patches
+
+#- opensuse patches
 Patch1: suspend-comment-configfile-options.diff
+# not needed in Mandriva
+#Patch2: suspend-susescripts.diff
 Patch3: suspend-default-compress.diff
+# no more bootsplash in kernel and thus no /proc/splash, patch not needed
+#Patch4: suspend-disable-bootsplash.diff
 Patch5: suspend-default-splash.diff
+Patch6: suspend-0.80-dont-return-eintr-on-abort.diff
 Patch10: suspend-use-input-device.diff
+# we don't test whitelist
+#Patch11: suspend-0.80-make-whitelist-test.diff
+# not needed, builds fine
+#Patch12: suspend-buildfixes.diff
 Patch13: suspend-0.80-vbetool-retry-on-errors.diff
 Patch14: suspend-multithreaded-image-saving.diff
 Patch15: suspend-0.80-suspend-output-to-logfile.diff
+# we don't use bootsplash, not needed
+#Patch16: suspend-splash-verbose-debug.diff
 Patch70: suspend-0.80-whitelist-openSUSE11.diff
-# Mandriva patches
+# opensuse-specific
+#Patch99: suspend-0.80-opensuse.org.diff
+
+#- Mandriva patches
 Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
+
 License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
@@ -58,16 +74,24 @@ s2ram is a suspend-to-RAM utility.
 
 %prep
 %setup -q -n %{distname}
-# opensuse patches
+#- opensuse patches
 %patch1 -p1
+#%patch2 -p0
 %patch3 -p0
+#%patch4 -p0
 %patch5 -p0
+#%patch6 -p1
 %patch10 -p1
+#%patch11 -p0
+#%patch12 -p0
 %patch13 -p0
 %patch14 -p1
 %patch15 -p1
+#%patch16 -p1
 %patch70 -p1
-# Mandriva patches
+#%patch99 -p1
+
+#- Mandriva patches
 %patch100 -p1 -b .no_s2ram_quirks
 %patch101 -p1 -b .bootsplash
 
