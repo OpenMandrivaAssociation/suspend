@@ -47,7 +47,7 @@ License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: pciutils-devel glibc-static-devel libx86-devel liblzo-devel splashy-devel
+BuildRequires: pciutils-devel libx86-devel liblzo-devel splashy-devel
 ExcludeArch: ppc
 Obsoletes: wltool
 Obsoletes: suspend-wltool
