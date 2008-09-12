@@ -19,6 +19,7 @@ Patch1: suspend-comment-configfile-options.diff
 Patch3: suspend-default-compress.diff
 Patch5: suspend-default-splash.diff
 Patch10: suspend-use-input-device.diff
+Patch13: suspend-0.80-vbetool-retry-on-errors.diff
 Patch14: suspend-multithreaded-image-saving.diff
 # Mandriva patches
 Patch100: suspend-0.8-no_s2ram_quirks.patch
@@ -60,6 +61,7 @@ s2ram is a suspend-to-RAM utility.
 %patch3 -p0
 %patch5 -p0
 %patch10 -p1
+%patch13 -p0
 %patch14 -p1
 # Mandriva patches
 %patch100 -p1 -b .no_s2ram_quirks
