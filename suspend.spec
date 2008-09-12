@@ -85,5 +85,3 @@ rm -rf %{buildroot}
 %files s2ram
 %defattr(-,root,root)
 %{_sbindir}/s2ram
-
-
