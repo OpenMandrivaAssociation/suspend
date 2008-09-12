@@ -76,7 +76,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc ChangeLog HOWTO README README.s2ram-whitelist ReleaseNotes TODO
+%doc HOWTO README README.s2ram-whitelist TODO
 %{_sbindir}/resume
 %{_sbindir}/s2both
 %{_sbindir}/s2disk
