@@ -21,6 +21,7 @@ Patch5: suspend-default-splash.diff
 Patch10: suspend-use-input-device.diff
 Patch13: suspend-0.80-vbetool-retry-on-errors.diff
 Patch14: suspend-multithreaded-image-saving.diff
+Patch15: suspend-0.80-suspend-output-to-logfile.diff
 # Mandriva patches
 Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
@@ -63,6 +64,7 @@ s2ram is a suspend-to-RAM utility.
 %patch10 -p1
 %patch13 -p0
 %patch14 -p1
+%patch15 -p1
 # Mandriva patches
 %patch100 -p1 -b .no_s2ram_quirks
 %patch101 -p1 -b .bootsplash
