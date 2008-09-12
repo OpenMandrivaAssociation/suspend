@@ -16,6 +16,7 @@ Release: %{release}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
 # opensuse patches
 Patch1: suspend-comment-configfile-options.diff
+Patch3: suspend-default-compress.diff
 Patch5: suspend-default-splash.diff
 Patch14: suspend-multithreaded-image-saving.diff
 # Mandriva patches
@@ -55,6 +56,7 @@ s2ram is a suspend-to-RAM utility.
 %setup -q -n %{distname}
 # opensuse patches
 %patch1 -p1
+%patch3 -p0
 %patch5 -p0
 %patch14 -p1
 # Mandriva patches
