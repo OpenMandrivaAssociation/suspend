@@ -1,12 +1,19 @@
 %define name suspend
 %define version 0.8
+%define cvs 20080612
+%if %{cvs}
+%define distname %{name}-%{version}.%{cvs}
+%define release %mkrel 1.%{cvs}
+%else
+%define distname %{name}-%{version}
 %define release %mkrel 1
+%endif
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source0: http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
 Patch0: suspend-0.8-no_s2ram_quirks.patch
 Patch1: suspend-0.5-bootsplash.patch
 # http://suspend.cvs.sourceforge.net/suspend/suspend/configure.ac?r1=1.10&r2=1.12&view=patch
@@ -42,7 +49,7 @@ Conflicts: suspend < 0.5-4mdv2007.1
 s2ram is a suspend-to-RAM utility.
 
 %prep
-%setup -q
+%setup -q -n %{distname}
 %patch0 -p1 -b .no_s2ram_quirks
 %patch1 -p1 -b .bootsplash
 %patch2 -p0 -b .splashy-detection
