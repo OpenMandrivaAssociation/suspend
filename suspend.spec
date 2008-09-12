@@ -14,6 +14,8 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
+# opensuse patches
+Patch5: suspend-default-splash.diff
 # Mandriva patches
 Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
@@ -49,10 +51,11 @@ s2ram is a suspend-to-RAM utility.
 
 %prep
 %setup -q -n %{distname}
+# opensuse patches
+%patch5 -p0
 # Mandriva patches
 %patch100 -p1 -b .no_s2ram_quirks
 %patch101 -p1 -b .bootsplash
-perl -pi -e 's/^#splash = y$/splash = y/' conf/suspend.conf
 
 %build
 %configure \
