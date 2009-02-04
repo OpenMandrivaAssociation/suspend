@@ -43,6 +43,7 @@ Patch70: suspend-0.80-whitelist-openSUSE11.diff
 Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
 Patch102: suspend-0.8.20080612-mdvcomment.patch
+Patch103: suspend-0.8-printf_format.patch
 
 License: GPL
 Group: System/Kernel and hardware
@@ -97,6 +98,7 @@ s2ram is a suspend-to-RAM utility.
 %patch100 -p1 -b .no_s2ram_quirks
 %patch101 -p1 -b .bootsplash
 %patch102 -p1 -b .mdvcomment
+%patch103 -p1 -b .printf_format
 
 %build
 %configure \
