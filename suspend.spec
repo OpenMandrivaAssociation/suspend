@@ -1,12 +1,13 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
+%define rel 3
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
-%define release %mkrel 2.%{cvs}
+%define release %mkrel %{rel}.%{cvs}
 %else
 %define distname %{name}-%{version}
-%define release %mkrel 2
+%define release %mkrel %{rel}
 %endif
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
