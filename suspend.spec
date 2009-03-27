@@ -44,6 +44,8 @@ Patch100: suspend-0.8-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
 Patch102: suspend-0.8.20080612-mdvcomment.patch
 Patch103: suspend-0.8-printf_format.patch
+# (blino) kill splashy before resume binary starts it
+Patch104: suspend-0.8.20080612-stopsplashy.patch
 
 License: GPL
 Group: System/Kernel and hardware
@@ -100,6 +102,7 @@ s2ram is a suspend-to-RAM utility.
 %patch101 -p1 -b .bootsplash
 %patch102 -p1 -b .mdvcomment
 %patch103 -p1 -b .printf_format
+%patch104 -p1 -b .stopsplashy
 
 %build
 %configure \
