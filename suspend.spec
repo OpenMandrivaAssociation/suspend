@@ -1,7 +1,7 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
-%define rel 3
+%define rel 4
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
 %define release %mkrel %{rel}.%{cvs}
@@ -54,6 +54,8 @@ Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: pciutils-devel libx86-devel liblzo-devel splashy-devel
 BuildRequires: zlib-devel
+# (tv) fix upgrade ordering (libpci3 needs to be updaded from 3.0 to 3.1 before ldetect is upgraded):
+Requires: %{mklibname pci 3} >= 3.1
 ExcludeArch: ppc
 Obsoletes: wltool
 Obsoletes: suspend-wltool
@@ -106,7 +108,7 @@ s2ram is a suspend-to-RAM utility.
 %patch104 -p1 -b .stopsplashy
 
 %build
-%configure \
+%configure2_5x \
   --enable-compress \
   --enable-splashy \
   --enable-threads \
