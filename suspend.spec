@@ -47,12 +47,14 @@ Patch102: suspend-0.8.20080612-mdvcomment.patch
 Patch103: suspend-0.8-printf_format.patch
 # (blino) kill splashy before resume binary starts it
 Patch104: suspend-0.8.20080612-stopsplashy.patch
+# (fc) plymouth support
+Patch105: suspend-plymouth.patch
 
 License: GPL
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: pciutils-devel libx86-devel liblzo-devel splashy-devel
+BuildRequires: pciutils-devel libx86-devel liblzo-devel 
 BuildRequires: zlib-devel
 # (tv) fix upgrade ordering (libpci3 needs to be updaded from 3.0 to 3.1 before ldetect is upgraded):
 Requires: %{mklibname pci 3} >= 3.1
@@ -61,6 +63,7 @@ Obsoletes: wltool
 Obsoletes: suspend-wltool
 Requires(post): drakxtools-backend >= 10.4.97-1mdv2007.1
 Requires(post): mkinitrd >= 4.2.17-27mdv2007.1
+BuildRequires: libplymouth-devel >= 0.7.2
 
 %description
 The goal of the project is to create a tool that can handle the so
@@ -106,11 +109,16 @@ s2ram is a suspend-to-RAM utility.
 %patch102 -p1 -b .mdvcomment
 %patch103 -p1 -b .printf_format
 %patch104 -p1 -b .stopsplashy
+%patch105 -p1 -b .plymouth
 
+
+#needed by patch105
+libtoolize --force
+autoreconf
 %build
 %configure2_5x \
   --enable-compress \
-  --enable-splashy \
+  --enable-plymouth \
   --enable-threads \
   --disable-resume-static
 %make
