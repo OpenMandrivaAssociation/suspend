@@ -50,7 +50,7 @@ Patch104: suspend-0.8.20080612-stopsplashy.patch
 # (fc) plymouth support
 Patch105: suspend-plymouth.patch
 
-License: GPL
+License: GPLv2
 Group: System/Kernel and hardware
 Url: http://suspend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
