@@ -1,7 +1,7 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
-%define rel 6
+%define rel 7
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
 %define release %mkrel %{rel}.%{cvs}
@@ -9,6 +9,8 @@
 %define distname %{name}-%{version}
 %define release %mkrel %{rel}
 %endif
+
+%bcond_without	uclibc
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
 Name: %{name}
@@ -49,6 +51,8 @@ Patch103: suspend-0.8-printf_format.patch
 Patch104: suspend-0.8.20080612-stopsplashy.patch
 # (fc) plymouth support
 Patch105: suspend-plymouth.patch
+# (proyvind): to get _GNU_SOURCE defined, fixes build with uclibc
+Patch106: suspend-0.8.20080612-configure-gnu-source.patch
 
 License: GPLv2
 Group: System/Kernel and hardware
@@ -64,6 +68,9 @@ Obsoletes: suspend-wltool
 Requires(post): drakxtools-backend >= 10.4.97-1mdv2007.1
 Requires(post): mkinitrd >= 4.2.17-27mdv2007.1
 BuildRequires: libplymouth-devel >= 0.7.2
+%if %{with uclibc}
+BuildRequires: uClibc-devel
+%endif
 
 %description
 The goal of the project is to create a tool that can handle the so
@@ -110,24 +117,47 @@ s2ram is a suspend-to-RAM utility.
 %patch103 -p1 -b .printf_format
 %patch104 -p1 -b .stopsplashy
 %patch105 -p1 -b .plymouth
+%patch106 -p1 -b .gnu_source~
 
 
 #needed by patch105
 libtoolize --force
 autoreconf
 %build
+export CONFIGURE_TOP=`pwd`
+%if %{with uclibc}
+mkdir -p uclibc
+cd uclibc
+%configure2_5x \
+  CC="%{uclibc_cc}" \
+  CFLAGS="%{uclibc_cflags}" \
+  --enable-compress \
+  --enable-plymouth \
+  --enable-threads \
+  --disable-resume-static
+%make
+cd ..
+%endif
+
+mkdir -p shared
+cd shared
 %configure2_5x \
   --enable-compress \
   --enable-plymouth \
   --enable-threads \
   --disable-resume-static
 %make
+cd ..
 
 %install
 rm -rf %{buildroot}
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_sysconfdir}
-%makeinstall_std
+%if %{with uclibc}
+install -m755 uclibc/resume -D %{buildroot}%{uclibc_root}%{_sbindir}/resume
+%endif
+
+%makeinstall_std -C shared
 ln -sf %{_libdir}/%{name}/resume %{buildroot}%{_sbindir}
 
 %clean
@@ -140,6 +170,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc HOWTO README README.s2ram-whitelist TODO
 %{_sbindir}/resume
+%if %{with uclibc}
+%{uclibc_root}%{_sbindir}/resume
+%endif
 %{_sbindir}/s2both
 %{_sbindir}/s2disk
 %{_sbindir}/swap-offset
