@@ -151,10 +151,11 @@ cd ..
 
 %install
 rm -rf %{buildroot}
-install -d %{buildroot}%{_sbindir}
+install -d %{buildroot}{,%{uclibc_root}}%{_sbindir}
 install -d %{buildroot}%{_sysconfdir}
 %if %{with uclibc}
-install -m755 uclibc/resume -D %{buildroot}%{uclibc_root}%{_sbindir}/resume
+install -m755 uclibc/resume -D %{buildroot}%{uclibc_root}%{_libdir}/%{name}/resume
+ln -sf %{uclibc_root}%{_libdir}/%{name}/resume %{buildroot}%{uclibc_root}%{_sbindir}/resume
 %endif
 
 %makeinstall_std -C shared
@@ -170,14 +171,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc HOWTO README README.s2ram-whitelist TODO
 %{_sbindir}/resume
-%if %{with uclibc}
-%{uclibc_root}%{_sbindir}/resume
-%endif
 %{_sbindir}/s2both
 %{_sbindir}/s2disk
 %{_sbindir}/swap-offset
 %{_libdir}/%{name}/resume
 %config(noreplace) %{_sysconfdir}/%{name}.conf
+%if %{with uclibc}
+%{uclibc_root}%{_sbindir}/resume
+%{uclibc_root}%{_libdir}/%{name}/resume
+%endif
 
 %files s2ram
 %defattr(-,root,root)
