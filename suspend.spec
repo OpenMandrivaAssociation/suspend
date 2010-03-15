@@ -10,7 +10,8 @@
 %define release %mkrel %{rel}
 %endif
 
-%bcond_without	uclibc
+# Not really used yet, so disable for now
+%bcond_with	uclibc
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
 Name: %{name}
