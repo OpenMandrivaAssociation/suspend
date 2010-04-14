@@ -1,7 +1,7 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
-%define rel 8
+%define rel 9
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
 %define release %mkrel %{rel}.%{cvs}
