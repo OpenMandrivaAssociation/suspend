@@ -68,7 +68,7 @@ Obsoletes: wltool
 Obsoletes: suspend-wltool
 Requires(post): drakxtools-backend >= 10.4.97-1mdv2007.1
 Requires(post): mkinitrd >= 4.2.17-27mdv2007.1
-BuildRequires: libplymouth-devel >= 0.7.2
+BuildRequires: plymouth-devel >= 0.7.2
 %if %{with uclibc}
 BuildRequires: uClibc-devel
 %endif
