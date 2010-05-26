@@ -1,7 +1,7 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
-%define rel 9
+%define rel 10
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
 %define release %mkrel %{rel}.%{cvs}
@@ -54,6 +54,8 @@ Patch104: suspend-0.8.20080612-stopsplashy.patch
 Patch105: suspend-plymouth.patch
 # (proyvind): to get _GNU_SOURCE defined, fixes build with uclibc
 Patch106: suspend-0.8.20080612-configure-gnu-source.patch
+# (pt) fix resume when splash = n in suspend.conf
+Patch107: suspend-plymouth-always-quit.patch
 
 License: GPLv2
 Group: System/Kernel and hardware
@@ -119,7 +121,7 @@ s2ram is a suspend-to-RAM utility.
 %patch104 -p1 -b .stopsplashy
 %patch105 -p1 -b .plymouth
 %patch106 -p1 -b .gnu_source~
-
+%patch107 -p1 -b .plymouth-quit
 
 #needed by patch105
 libtoolize --force
