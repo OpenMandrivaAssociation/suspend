@@ -1,7 +1,7 @@
 %define name suspend
 %define version 0.8
 %define cvs 20080612
-%define rel 12
+%define rel 13
 %if %{cvs}
 %define distname %{name}-%{version}.%{cvs}
 %define release %mkrel %{rel}.%{cvs}
@@ -69,7 +69,7 @@ ExcludeArch: ppc
 Obsoletes: wltool
 Obsoletes: suspend-wltool
 Requires(post): drakxtools-backend >= 10.4.97-1mdv2007.1
-Requires(post): mkinitrd >= 4.2.17-27mdv2007.1
+Requires(post): mkinitrd-command
 BuildRequires: plymouth-devel >= 0.7.2
 %if %{with uclibc}
 BuildRequires: uClibc-devel
