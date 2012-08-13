@@ -69,32 +69,25 @@ s2ram is a suspend-to-RAM utility.
 %setup -q -n %{distname}
 #- opensuse patches
 %patch1 -p1
-#%patch2 -p0
 %patch3 -p0
-#%patch4 -p0
 %patch5 -p0
-#%patch6 -p1
-#%patch11 -p0
-#%patch12 -p0
 %patch13 -p0
 %patch15 -p1 -b .log~
-#%patch16 -p1
-#%%patch70 -p1
-#%patch99 -p1
 
 #- Mandriva patches
-%patch100 -p1 -b .no_s2ram_quirks
-%patch101 -p1 -b .bootsplash
-%patch102 -p1 -b .mdvcomment
-%patch103 -p1 -b .printf_format
-%patch104 -p1 -b .stopsplashy
-%patch105 -p1 -b .plymouth
+%patch100 -p1 -b .no_s2ram_quirks~
+%patch101 -p1 -b .bootsplash~
+%patch102 -p1 -b .mdvcomment~
+%patch103 -p1 -b .printf_format~
+%patch104 -p1 -b .stopsplashy~
+%patch105 -p1 -b .plymouth~
 %patch106 -p1 -b .gnu_source~
 %patch107 -p1 -b .e6510~
 
 #needed by patch105
 libtoolize --force
 autoreconf
+
 %build
 export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
