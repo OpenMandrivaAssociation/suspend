@@ -1,22 +1,11 @@
-%define name suspend
-%define version 0.8
-%define cvs 20080612
-%define rel 13
-%if %{cvs}
-%define distname %{name}-%{version}.%{cvs}
-%define release %mkrel %{rel}.%{cvs}
-%else
-%define distname %{name}-%{version}
-%define release %mkrel %{rel}
-%endif
-
 # Not really used yet, so disable for now
 %bcond_with	uclibc
 
 Summary: Userland tools for suspend-to-disk and suspend-to-RAM
-Name: %{name}
-Version: %{version}
-Release: %{release}
+Name:		suspend
+Version:	1.0
+Release:	1
+%define distname %{name}-utils-%{version}
 Source0: http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
 
 #- opensuse patches
@@ -29,14 +18,12 @@ Patch3: suspend-default-compress.diff
 Patch5: suspend-default-splash.diff
 # user interruption could be considered as an error, don't apply
 #Patch6: suspend-0.80-dont-return-eintr-on-abort.diff
-Patch10: suspend-use-input-device.diff
 # we don't test whitelist
 #Patch11: suspend-0.80-make-whitelist-test.diff
 # not needed, builds fine
 #Patch12: suspend-buildfixes.diff
 Patch13: suspend-0.80-vbetool-retry-on-errors.diff
-Patch14: suspend-multithreaded-image-saving.diff
-Patch15: suspend-0.80-suspend-output-to-logfile.diff
+Patch15:	suspend-1.0-suspend-output-to-logfile.diff
 # we don't use bootsplash, not needed
 #Patch16: suspend-splash-verbose-debug.diff
 Patch70: suspend-0.80-whitelist-openSUSE11.diff
@@ -44,18 +31,16 @@ Patch70: suspend-0.80-whitelist-openSUSE11.diff
 #Patch99: suspend-0.80-opensuse.org.diff
 
 #- Mandriva patches
-Patch100: suspend-0.8-no_s2ram_quirks.patch
+Patch100: suspend-1.0-no_s2ram_quirks.patch
 Patch101: suspend-0.5-bootsplash.patch
 Patch102: suspend-0.8.20080612-mdvcomment.patch
 Patch103: suspend-0.8-printf_format.patch
 # (blino) kill splashy before resume binary starts it
 Patch104: suspend-0.8.20080612-stopsplashy.patch
 # (fc) plymouth support
-Patch105: suspend-plymouth.patch
+Patch105: suspend-1.0-plymouth.patch
 # (proyvind): to get _GNU_SOURCE defined, fixes build with uclibc
 Patch106: suspend-0.8.20080612-configure-gnu-source.patch
-# (pt) fix resume when splash = n in suspend.conf
-Patch107: suspend-plymouth-always-quit.patch
 
 License: GPLv2
 Group: System/Kernel and hardware
@@ -103,14 +88,12 @@ s2ram is a suspend-to-RAM utility.
 #%patch4 -p0
 %patch5 -p0
 #%patch6 -p1
-%patch10 -p1
 #%patch11 -p0
 #%patch12 -p0
 %patch13 -p0
-%patch14 -p1
-%patch15 -p1
+%patch15 -p1 -b .log~
 #%patch16 -p1
-%patch70 -p1
+#%%patch70 -p1
 #%patch99 -p1
 
 #- Mandriva patches
@@ -121,7 +104,6 @@ s2ram is a suspend-to-RAM utility.
 %patch104 -p1 -b .stopsplashy
 %patch105 -p1 -b .plymouth
 %patch106 -p1 -b .gnu_source~
-%patch107 -p1 -b .plymouth-quit
 
 #needed by patch105
 libtoolize --force
@@ -162,6 +144,7 @@ ln -sf %{uclibc_root}%{_libdir}/%{name}/resume %{buildroot}%{uclibc_root}%{_sbin
 %endif
 
 %makeinstall_std -C shared
+rm -rf %{buildroot}%{_docdir}/suspend-utils
 ln -sf %{_libdir}/%{name}/resume %{buildroot}%{_sbindir}
 
 %clean
@@ -172,7 +155,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc HOWTO README README.s2ram-whitelist TODO
+%doc HOWTO README README.s2ram-whitelist
 %{_sbindir}/resume
 %{_sbindir}/s2both
 %{_sbindir}/s2disk
