@@ -1,0 +1,84 @@
+--- suspend-utils-1.0/suspend.c.no_s2ram_quirks	2012-08-13 19:06:04.972182160 +0200
++++ suspend-utils-1.0/suspend.c	2012-08-13 19:08:19.905140893 +0200
+@@ -91,10 +91,6 @@ static unsigned long encrypt_buf_size;
+ #define key_name NULL
+ #define encrypt_buf_size 0
+ #endif
+-#ifdef CONFIG_BOTH
+-static char s2ram;
+-static char s2ram_kms;
+-#endif
+ static char early_writeout;
+ static char splash_param;
+ #ifdef CONFIG_FBSPLASH
+@@ -1814,23 +1810,6 @@ int suspend_system(int snapshot_fd, int
+ 			image_size = 0;
+ 		} else {
+ 			splash.progress(100);
+-#ifdef CONFIG_BOTH
+-			if (s2ram_kms || s2ram) {
+-				/* If we die (and allow system to continue)
+-				 * between now and reset_signature(), very bad
+-				 * things will happen. */
+-				error = suspend_to_ram(snapshot_fd);
+-				if (error)
+-					goto Shutdown;
+-				reset_signature(resume_fd);
+-				free_swap_pages(snapshot_fd);
+-				free_snapshot(snapshot_fd);
+-				if (!s2ram_kms)
+-					s2ram_resume();
+-				goto Unfreeze;
+-			}
+-Shutdown:
+-#endif
+ 			close(resume_fd);
+ 			suspend_shutdown(snapshot_fd);
+ 		}
+@@ -2294,34 +2273,14 @@ static inline int get_config(int argc, c
+ 			}
+ 			break;
+ 		default:
+-#ifdef CONFIG_BOTH
+-			s2ram_add_flag(i, optarg);
+-			break;
+-#else
+ 			usage(my_name, options, optstring);
+ 			return -EINVAL;
+-#endif
+ 		}
+ 	}
+ 
+ 	if (optind < argc)
+ 		strncpy(resume_dev_name, argv[optind], MAX_STR_LEN - 1);
+ 
+-#ifdef CONFIG_BOTH
+-	s2ram_kms = !s2ram_check_kms();
+-	if (s2ram_kms)
+-		return 0;
+-
+-	s2ram = s2ram_is_supported();
+-	/* s2ram_is_supported returns EINVAL if there was something wrong
+-	 * with the options that where added with s2ram_add_flag.
+-	 * On any other error (unsupported) we will just continue with s2disk.
+-	 */
+-	if (s2ram == EINVAL)
+-		return -EINVAL;
+-	
+-	s2ram = !s2ram;
+-#endif
+ 
+ 	return 0;
+ }
+@@ -2571,11 +2530,6 @@ int main(int argc, char *argv[])
+ 
+ 	splash.progress(5);
+ 
+-#ifdef CONFIG_BOTH
+-	/* If s2ram_hacks returns != 0, better not try to suspend to RAM */
+-	if (s2ram) 
+-		s2ram = !s2ram_hacks();
+-#endif
+ #ifdef CONFIG_ENCRYPT
+         if (do_encrypt && ! use_RSA)
+                 splash.read_password(password, 1);

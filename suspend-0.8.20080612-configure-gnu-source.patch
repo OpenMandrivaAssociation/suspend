@@ -1,0 +1,11 @@
+diff -p -up suspend-0.8.20080612/configure.ac.gnu_source~ suspend-0.8.20080612/configure.ac
+--- suspend-0.8.20080612/configure.ac.gnu_source~	2009-12-09 01:35:46.793926610 -0500
++++ suspend-0.8.20080612/configure.ac	2009-12-09 01:35:22.243408289 -0500
+@@ -123,6 +123,7 @@ AC_ARG_WITH(
+ )
+ 
+ 
++AC_GNU_SOURCE
+ AC_PROG_CC
+ AC_PROG_INSTALL
+ AC_PROG_LIBTOOL		# We are using libtool so it auto-find static dependencies

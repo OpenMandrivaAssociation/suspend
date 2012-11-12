@@ -1,0 +1,22 @@
+Index: b/whitelist.c
+===================================================================
+--- a/whitelist.c
++++ b/whitelist.c
+@@ -7,14 +7,15 @@
+ #include <stdlib.h>
+ #include "whitelist.h"
+ 
+-char *whitelist_version = "$Id: whitelist.c,v 1.127 2008/06/10 16:51:24 seife Exp $";
++char *whitelist_version = "$Id: whitelist.c,v 1.127-os11.0.0 2008/06/10 16:51:24 seife Exp $";
+ 
+ struct machine_entry whitelist[] = {
+ 	{ "IBM",			"",		"ThinkPad X32",	"", RADEON_OFF|S3_BIOS|S3_MODE },
+ 	/* Michael Wagner <michael-wagner@gmx.de> */
+ 	{ "4MBOL&S",			"7521 *",	"REV. A0",	"", 0 },
+ 	/* Alexander Wirt */
+-	{ "Apple Computer, Inc.",	"MacBook1,1",		"",	"", VBE_SAVE },
++	/* https://bugzilla.novell.com/show_bug.cgi?id=387956 */
++	{ "Apple Computer, Inc.",	"MacBook1,1",		"",	"", 0 },
+ 	/* Mildred <ml.mildred593@online.fr>, needs VBE_SAVE from console, but that slows resuming */
+ 	{ "Apple Inc.",			"MacBook2,1",		"1.0",	"", 0 },
+ 	/* Marvin Stark <marv@der-marv.de> */

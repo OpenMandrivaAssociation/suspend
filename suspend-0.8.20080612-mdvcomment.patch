@@ -1,0 +1,18 @@
+diff -p -up suspend-0.8.20080612/conf/suspend.conf.mdvcomment suspend-0.8.20080612/conf/suspend.conf
+--- suspend-0.8.20080612/conf/suspend.conf.mdvcomment	2008-09-12 17:24:45.000000000 +0200
++++ suspend-0.8.20080612/conf/suspend.conf	2008-09-12 17:25:20.000000000 +0200
+@@ -1,14 +1,3 @@
+-#############################################################################
+-##
+-## note:
+-## using pm-utils or powersaved, this file (/etc/suspend.conf) only serves as
+-## a template, image_size and resume_device are filled in dynamically 
+-## and the generated /var/lib/s2disk.conf is used to suspend.
+-## _If_ you enter stuff here, it will be copied to that file unchanged,
+-## but this might skip some features and sanity checks.
+-##
+-#############################################################################
+-##
+ ## your snapshot device. You should not need to change this.
+ # snapshot device = /dev/snapshot
+ #

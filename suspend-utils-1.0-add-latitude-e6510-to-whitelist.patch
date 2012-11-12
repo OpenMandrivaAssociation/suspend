@@ -1,0 +1,11 @@
+--- suspend-utils-1.0/whitelist.c.e6510~	2012-08-13 19:41:18.055649370 +0200
++++ suspend-utils-1.0/whitelist.c	2012-08-13 19:41:59.095146449 +0200
+@@ -559,6 +559,8 @@ struct machine_entry whitelist[] = {
+ 	{ "Dell Inc.",	"Latitude E6400                  ",	"",	"A20",	0 },
+ 	/* Martin Jungmann <74258byme@gmx.de> */
+ 	{ "Dell Inc.",	"Latitude E6500                  ",	"",	"A23",	0 },
++	/* Per Øyvind Karlsen <peroyvind@mandriva.org> */
++	{ "Dell Inc.",	"Latitude E6510",			"",	"",	0 },
+ 	/* imported from acpi-support 0.59 "half known". */
+ 	{ "Dell Inc.",	"Latitude X1*",	"",	"",	VBE_POST|VBE_SAVE|UNSURE },
+ 	/* imported from acpi-support 0.59 "half known". */

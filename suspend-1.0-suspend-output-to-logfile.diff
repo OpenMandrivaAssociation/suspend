@@ -1,0 +1,263 @@
+--- suspend-utils-1.0/suspend.c.log~	2012-08-13 19:04:09.336489869 +0200
++++ suspend-utils-1.0/suspend.c	2012-08-13 19:04:13.947557611 +0200
+@@ -54,9 +54,21 @@ static loff_t test_image_size;
+ 
+ #define suspend_error(msg, args...) \
+ do { \
++	if (!freeze_log) { \
++		int _err = errno; \
++		fprintf(logf, "%s: " msg " Reason: %m\n", my_name, ## args); \
++		errno = _err; \
++	} \
+ 	fprintf(stderr, "%s: " msg " Reason: %m\n", my_name, ## args); \
+ } while (0)
+ 
++#define suspend_printf(format, args...) \
++do { \
++	if (!freeze_log) \
++		fprintf(logf, format, ## args); \
++	fprintf(stdout, format, ## args); \
++} while (0)
++
+ static char snapshot_dev_name[MAX_STR_LEN] = SNAPSHOT_DEVICE;
+ static char resume_dev_name[MAX_STR_LEN] = RESUME_DEVICE;
+ static loff_t resume_offset;
+@@ -97,6 +109,8 @@ static enum {
+ } shutdown_method = SHUTDOWN_METHOD_PLATFORM;
+ static int resume_pause;
+ static char verify_image;
++static int freeze_log;
++static FILE *logf;
+ #ifdef CONFIG_THREADS
+ static char use_threads;
+ #else
+@@ -737,11 +751,17 @@ static int save_page(struct swap_writer
+ 	int error;
+ 
+ 	offset = next_swap_page(handle);
+-	if (!offset)
++	if (!offset) {
++		freeze_log = 0;
++		suspend_printf("%s: next_swap_page returned 0\n", my_name);
+ 		return -ENOSPC;
++	}
+ 	error = write_page(handle->fd, src, offset);
+-	if (error)
++	if (error) {
++		freeze_log = 0;
++		suspend_printf("%s: write_page returned %d\n", my_name, error);
+ 		return error;
++	}
+ 	handle->swap_needed -= page_size;
+ 	handle->written_data += page_size;
+ 	return 0;
+@@ -1276,7 +1296,7 @@ static int save_image(struct swap_writer
+ 	if (abort_possible)
+ 		strcat(message, " (press " ABORT_KEY_NAME " to abort) ");
+ 	strcat(message, "...");
+-	printf("%s: %s     ", my_name, message);
++	suspend_printf("%s: %s     ", my_name, message);
+ 	splash.set_caption(message);
+ 
+ 	if (use_threads)
+@@ -1315,7 +1335,8 @@ static int save_image(struct swap_writer
+ 				switch (key) {
+ 				case ABORT_KEY_CODE:
+ 					if (abort_possible) {
+-						printf(" aborted!\n");
++						freeze_log = 0;
++						suspend_printf(" aborted!\n");
+ 						error = -EINTR;
+ 						goto Exit;
+ 					}
+@@ -1337,8 +1358,11 @@ static int save_image(struct swap_writer
+ 		if (handle->page_ptr - handle->buffer >= buffer_size) {
+ 			/* The buffer is full, flush it */
+ 			error = flush_buffer(handle);
+-			if (error)
++			if (error) {
++				suspend_printf("%s: flush_buffer error %d\n",
++						my_name, error);
+ 				break;
++			}
+ 			handle->page_ptr = handle->buffer;
+ 		}
+ 	}
+@@ -1376,7 +1400,7 @@ static int enough_swap(struct swap_write
+ 	loff_t size = do_compress ?
+ 			handle->swap_needed / 2 : handle->swap_needed;
+ 
+-	printf("%s: Free swap: %llu kilobytes\n", my_name,
++	suspend_printf("%s: Free swap: %llu kilobytes\n", my_name,
+ 		(unsigned long long)free_swap / 1024);
+ 	return free_swap > size;
+ }
+@@ -1435,15 +1459,22 @@ static int write_image(int snapshot_fd,
+ 	printf("%s: System snapshot ready. Preparing to write\n", my_name);
+ 	/* Allocate a swap page for the additional "userland" header */
+ 	start = alloc_swap_page(snapshot_fd, 1);
+-	if (!start)
++	if (!start) {
++		freeze_log = 0;
++		suspend_printf("%s: alloc_swap_page failed\n", my_name);
+ 		return -ENOSPC;
++	}
+ 
+ 	header  = getmem(page_size);
+ 	memset(header, 0, page_size);
+ 
+ 	error = init_swap_writer(&handle, snapshot_fd, resume_fd, test_fd);
+-	if (error)
++	if (error) {
++		freeze_log = 0;
++		suspend_printf("%s: init_swap_writer failed (%d)\n",
++				my_name, error);
+ 		goto Exit;
++	}
+ 
+ 	image_size = test_mode ? test_image_size : get_image_size(snapshot_fd);
+ 	if (image_size > 0) {
+@@ -1487,12 +1518,14 @@ static int write_image(int snapshot_fd,
+ 					(handle.swap_needed >> 4) + 67);
+ 	}
+ 	if (!enough_swap(&handle)) {
+-		fprintf(stderr, "%s: Not enough free swap\n", my_name);
++		freeze_log = 0;
++		suspend_printf("%s: Not enough free swap\n", my_name);
+ 		error = -ENOSPC;
+ 		goto Free_writer;
+ 	}
+ 	if (!preallocate_swap(&handle)) {
+-		fprintf(stderr, "%s: Failed to allocate swap\n", my_name);
++		freeze_log = 0;
++		suspend_printf("%s: Failed to allocate swap\n", my_name);
+ 		error = -ENOSPC;
+ 		goto Free_writer;
+ 	}
+@@ -1548,7 +1581,8 @@ No_RSA:
+ 	}
+ 
+ 	if (error) {
+-		fprintf(stderr,"%s: libgcrypt error: %s\n", my_name,
++		freeze_log = 0;
++		suspend_printf("%s: libgcrypt error: %s\n", my_name,
+ 			gcry_strerror(error));
+ 		goto Free_writer;
+ 	}
+@@ -1655,11 +1689,12 @@ static int reset_signature(int fd)
+ 	}
+ 	fsync(fd);
+ 	if (error) {
+-		fprintf(stderr, "%s: Error %d resetting the image.\n"
++		printf("%s: Error %d resetting the image.\n"
+ 			"There should be valid image on disk. "
+ 			"Powerdown and carry out normal resume.\n"
+ 			"Continuing with this booted system "
+ 			"will lead to data corruption.\n", my_name, error);
++		fflush(stdout);
+ 		while(1)
+ 			sleep(10);
+ 	}
+@@ -1680,7 +1715,8 @@ static void suspend_shutdown(int snapsho
+ 	power_off();
+ 	/* Signature is on disk, it is very dangerous to continue now.
+ 	 * We'd do resume with stale caches on next boot. */
+-	fprintf(stderr,"Powerdown failed. That's impossible.\n");
++	printf("Powerdown failed. That's impossible.\n");
++	fflush(stdout);
+ 	while(1)
+ 		sleep (60);
+ }
+@@ -1734,22 +1770,29 @@ int suspend_system(int snapshot_fd, int
+ 	}
+ 
+ 	sprintf(message, "Snapshotting system");
+-	printf("%s: %s\n", my_name, message);
+ 	splash.set_caption(message);
+-	attempts = 2;
++	attempts = image_size ? 2 : 1;
+ 	do {
++		suspend_printf("%s: %s\n", my_name, message);
+ 		if (set_image_size(snapshot_fd, image_size)) {
+ 			error = errno;
++			suspend_printf("%s: set_image_size result %d\n",
++					my_name, error);
+ 			break;
+ 		}
+ 		if (atomic_snapshot(snapshot_fd, &in_suspend)) {
+ 			error = errno;
++			suspend_printf("%s: atomic_snapshot result %d\n",
++					my_name, error);
+ 			break;
+ 		}
++		freeze_log = 1;
++		printf("%s: snapshot done\n", my_name);
+ 		if (!in_suspend) {
++			freeze_log = 0;
+ 			/* first unblank the console, see console_codes(4) */
+ 			printf("\e[13]");
+-			printf("%s: returned to userspace\n", my_name);
++			suspend_printf("%s: returned to userspace\n", my_name);
+ 			free_snapshot(snapshot_fd);
+ 			break;
+ 		}
+@@ -1758,10 +1801,17 @@ int suspend_system(int snapshot_fd, int
+ 		if (error) {
+ 			free_swap_pages(snapshot_fd);
+ 			free_snapshot(snapshot_fd);
+-			image_size = 0;
+ 			error = -error;
+ 			if (error != ENOSPC)
+ 				break;
++			freeze_log = 0;
++			if (image_size)
++				suspend_printf("%s: retrying, image_size=0\n",
++						my_name);
++			else
++				suspend_printf("%s: write_image -> ENOSPC\n",
++						my_name);
++			image_size = 0;
+ 		} else {
+ 			splash.progress(100);
+ #ifdef CONFIG_BOTH
+@@ -1830,7 +1880,7 @@ static int set_kmsg_redirect;
+  */
+ static int prepare_console(int *orig_vc, int *new_vc)
+ {
+-	int fd, error, vt = -1;
++	int fd, error, tmp, vt = -1;
+ 	char vt_name[GENERIC_NAME_SIZE];
+ 	struct vt_stat vtstat;
+ 	char clear_vt, tiocl[2];
+@@ -1882,6 +1932,19 @@ static int prepare_console(int *orig_vc,
+ 		write(fd, msg, strlen(msg));
+ 	}
+ 
++	/* for logging, old stderr will be connected to logfd. Real stderr
++	   is redirected to console.
++	 */
++	tmp = dup(2);
++	logf = fdopen(tmp, "a");
++	if (!logf) {
++		error = errno;
++		suspend_error("Could not reopen stderr.");
++		goto Close_fd;
++	}
++	/* allow suspend_error to print to logfd */
++	freeze_log = 0;
++
+ 	dup2(fd, 0);
+ 	dup2(fd, 1);
+ 	dup2(fd, 2);
+@@ -2288,6 +2351,11 @@ int main(int argc, char *argv[])
+ 	} while (ret < 3);
+ 	close(ret);
+ 
++	/* suspend_error might not yet print to the logfile stream, since
++	   it is not open yet.
++	 */
++	freeze_log = 1;
++
+ 	ret = get_config(argc, argv);
+ 	if (ret)
+ 		return -ret;

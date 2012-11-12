@@ -1,0 +1,46 @@
+diff -p -up suspend-0.8.20080612/splashy_funcs.c.stopsplashy suspend-0.8.20080612/splashy_funcs.c
+--- suspend-0.8.20080612/splashy_funcs.c.stopsplashy	2008-02-19 16:31:27.000000000 +0100
++++ suspend-0.8.20080612/splashy_funcs.c	2009-03-27 12:43:46.000000000 +0100
+@@ -15,14 +15,42 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <splashy.h>
++#include <fcntl.h>
+ 
+ #include "splash.h"
+ #include "encrypt.h"
+ #include "splashy_funcs.h"
+ 
++int splashy_update(char *arg) {
++	const char *cmd = "/sbin/splashy_update";
++	pid_t pid = fork();
++	if (!pid) {
++		int fd = open("/dev/null", O_RDWR);
++		dup2(fd, 2);
++		close(fd);
++		execl(cmd, cmd, arg, (char *) NULL);
++	}
++	else {
++		int status;
++		waitpid(pid, &status, 0);
++		return status;
++	}
++}
++
++void terminate_splashy() {
++	if (splashy_update("test"))
++		return;
++	splashy_update("exit");
++	while (!splashy_update("test"))
++		usleep(100000);
++}
++
+ int splashy_open(int mode)
+ {
+ 	int ret;
++
++	terminate_splashy();
++
+ 	if ((ret = splashy_init (NULL,(mode==SPL_RESUME?"resume":"suspend"))) < 0)
+ 	{
+ 		fprintf(stderr,"splashy_init: error %d",ret);

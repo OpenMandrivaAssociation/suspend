@@ -1,0 +1,68 @@
+--- suspend-0.8.20080612/bootsplash.c.bootsplash	2008-02-19 18:31:26.000000000 +0300
++++ suspend-0.8.20080612/bootsplash.c	2009-02-04 11:35:45.000000000 +0300
+@@ -52,7 +52,7 @@ static int bootsplash_write(const char *
+ 	return 0;
+ }
+ 
+-static int bootsplash_to_silent(void)
++int bootsplash_to_silent(void)
+ {
+ 	return bootsplash_write("silent\n");
+ }
+--- suspend-0.8.20080612/bootsplash.h.bootsplash	2006-09-18 16:00:09.000000000 +0400
++++ suspend-0.8.20080612/bootsplash.h	2009-02-04 11:35:45.000000000 +0300
+@@ -14,6 +14,7 @@
+ 
+ int bootsplash_open(void);
+ int bootsplash_prepare(void);
++int bootsplash_to_silent(void);
+ int bootsplash_finish(void);
+ int bootsplash_progress(int p);
+ void bootsplash_switch_to(void);
+--- suspend-0.8.20080612/splash.c.bootsplash	2009-02-04 11:34:05.000000000 +0300
++++ suspend-0.8.20080612/splash.c	2009-02-04 11:35:45.000000000 +0300
+@@ -191,6 +191,7 @@ void splash_prepare(struct splash *splas
+ 	splash->finish      = splash_dummy_int_void;
+ 	splash->progress    = splash_dummy_int_int;
+ 	splash->switch_to   = splash_dummy_void_void;
++	splash->silent      = splash_dummy_int_void;
+ 	splash->dialog	    = splash_dialog;
+ #ifdef CONFIG_ENCRYPT
+ 	splash->read_password   = read_password;
+@@ -212,6 +213,7 @@ void splash_prepare(struct splash *splas
+ 		splash->progress    = bootsplash_progress;
+ 		splash->switch_to   = bootsplash_switch_to;
+ 		splash->dialog	    = bootsplash_dialog;
++		splash->silent      = bootsplash_to_silent;
+ 		splash->read_password = bootsplash_read_password;
+ 		if (!open_input_fd())
+ 			splash->key_pressed = key_pressed;
+--- suspend-0.8.20080612/splash.h.bootsplash	2009-02-04 11:34:05.000000000 +0300
++++ suspend-0.8.20080612/splash.h	2009-02-04 11:35:45.000000000 +0300
+@@ -32,6 +32,7 @@ struct splash {
+ 	int (*finish) (void);
+ 	int (*progress) (int p);
+ 	void (*switch_to) (void);
++	int (*silent) (void);
+ 	void (*read_password) (char *, int);
+ 	int (*dialog) (const char *);
+ 	int (*prepare_abort) (struct termios *, struct termios *);
+--- suspend-0.8.20080612/suspend.c.bootsplash	2009-02-04 11:34:06.000000000 +0300
++++ suspend-0.8.20080612/suspend.c	2009-02-04 11:35:45.000000000 +0300
+@@ -1721,7 +1721,7 @@ int suspend_system(int snapshot_fd, int 
+ 	/* This a hack for a bug in bootsplash. Apparently it will
+ 	 * drop to 'verbose mode' after the freeze() call.
+ 	 */
+-	splash.switch_to();
++	splash.silent();
+ 	splash.progress(15);
+ 
+ 	if (error) {
+@@ -2490,6 +2490,7 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	splash_prepare(&splash, splash_param);
++	splash.switch_to();
+ 
+ 	if (lock_vt() < 0) {
+ 		ret = errno;
