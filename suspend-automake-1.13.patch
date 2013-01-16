@@ -1,0 +1,13 @@
+--- suspend-utils-1.0/configure.ac.bero	2013-01-16 02:49:03.308270208 +0100
++++ suspend-utils-1.0/configure.ac	2013-01-16 02:49:09.583198035 +0100
+@@ -8,8 +8,8 @@
+ 
+ AC_PREREQ([2.59])
+ AC_INIT([suspend-utils], [1.0])
+-AM_INIT_AUTOMAKE([${PACKAGE_NAME}], [${PACKAGE_VERSION}])
+-AM_CONFIG_HEADER([config.h])
++AM_INIT_AUTOMAKE
++AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_SRCDIR([suspend.c])
+ 
+ AC_CANONICAL_HOST

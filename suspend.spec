@@ -31,6 +31,7 @@ Patch105:	suspend-1.0-plymouth.patch
 # (proyvind): to get _GNU_SOURCE defined, fixes build with uclibc
 Patch106:	suspend-0.8.20080612-configure-gnu-source.patch
 Patch107:	suspend-utils-1.0-add-latitude-e6510-to-whitelist.patch
+Patch108:	suspend-automake-1.13.patch
 ExcludeArch:	ppc
 
 BuildRequires:	liblzo-devel 
@@ -81,6 +82,7 @@ s2ram is a suspend-to-RAM utility.
 %patch105 -p1 -b .plymouth~
 %patch106 -p1 -b .gnu_source~
 %patch107 -p1 -b .e6510~
+%patch108 -p1 -b .am113~
 
 #needed by patch105
 libtoolize --force
