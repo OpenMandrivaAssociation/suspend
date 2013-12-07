@@ -5,7 +5,7 @@
 Summary:	Userland tools for suspend-to-disk and suspend-to-RAM
 Name:		suspend
 Version:	1.0
-Release:	11
+Release:	12
 License:	GPLv2
 Group:		System/Kernel and hardware
 Url:		http://suspend.sourceforge.net/
