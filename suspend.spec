@@ -34,7 +34,7 @@ Patch107:	suspend-utils-1.0-add-latitude-e6510-to-whitelist.patch
 Patch108:	suspend-automake-1.13.patch
 ExcludeArch:	ppc
 
-BuildRequires:	liblzo-devel 
+BuildRequires:	lzo-devel 
 BuildRequires:	libx86-devel
 BuildRequires:	pkgconfig(libpci)
 BuildRequires:	pkgconfig(ply-splash-core)
@@ -93,7 +93,7 @@ export CONFIGURE_TOP=`pwd`
 %if %{with uclibc}
 mkdir -p uclibc
 cd uclibc
-%configure2_5x \
+%configure \
   CC="%{uclibc_cc}" \
   CFLAGS="%{uclibc_cflags}" \
   --enable-compress \
@@ -106,7 +106,7 @@ cd ..
 
 mkdir -p shared
 cd shared
-%configure2_5x \
+%configure \
   --enable-compress \
   --enable-plymouth \
   --enable-threads \
