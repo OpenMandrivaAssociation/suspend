@@ -1,6 +1,7 @@
 # Not really used yet, so disable for now
 %bcond_with	uclibc
 %define distname %{name}-utils-%{version}
+%define _disable_ld_no_undefined 1
 
 Summary:	Userland tools for suspend-to-disk and suspend-to-RAM
 Name:		suspend
