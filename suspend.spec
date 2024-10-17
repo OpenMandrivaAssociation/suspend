@@ -9,7 +9,7 @@ Version:	1.0
 Release:	THIS IS OBSOLETED
 License:	GPLv2
 Group:		System/Kernel and hardware
-Url:		http://suspend.sourceforge.net/
+Url:		https://suspend.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{distname}.tar.bz2
 
 #- opensuse patches
